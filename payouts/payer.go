@@ -225,6 +225,7 @@ func (u *PayoutsProcessor) process() {
 
 		if waitingCount > 5 {
 			wg.Wait()
+			waitingCount = 0
 		}
 	}
 
