@@ -1,6 +1,6 @@
 {
 	"threads": 2,
-	"coin": "eth",
+	"coin": "esn",
 	"name": "main",
 
 	"proxy": {
@@ -101,16 +101,16 @@
 	},
 
 	"payouts": {
-		"enabled": false,
-		"requirePeers": 25,
+		"enabled": true,
+		"requirePeers": 1,
 		"interval": "120m",
 		"daemon": "http://127.0.0.1:8545",
 		"timeout": "10s",
 		"address": "0x0",
 		"gas": "21000",
-		"gasPrice": "50000000000",
+		"gasPrice": "100000000000",
 		"autoGas": true,
-		"threshold": 500000000,
+		"threshold": 10000000000,
 		"bgsave": false
 	},
 
