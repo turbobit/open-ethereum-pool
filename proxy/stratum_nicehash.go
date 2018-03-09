@@ -173,10 +173,11 @@ func (cs *Session) handleNHTCPMessage(s *ProxyServer, req *StratumReq) error {
 		// https://github.com/nicehash/nhethpool/blob/060817a9e646cd9f1092647b870ed625ee138ab4/nhethpool/EthereumInstance.cs#L369
 
 		// WORKER NAME MANDATORY  0x1234.WORKERNAME
-		// WILL CRASH IF OMITTED
-		// FIX ME: pool shouldn't crash. reject submission instead.
 		splitData := strings.Split(params[0], ".")
-		id := splitData[1]
+		id := "0"
+		if len(splitData) > 1 {
+			id = splitData[1]
+		}
 
 		if cs.JobDetails.JobID != params[1] {
 			log.Printf("Stale share (mining.submit JobID received %s != current %s)", params[1], cs.JobDetails.JobID)
