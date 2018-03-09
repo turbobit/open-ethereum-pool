@@ -193,15 +193,6 @@ func (cs *Session) handleNHTCPMessage(s *ProxyServer, req *StratumReq) error {
 			cs.JobDetails.HeaderHash,
 		}
 
-		// test nicehash
-		if (params[1][0:2] != "0x") {
-			params[1] = "0x" + params[1]
-		}
-		if (params[2][0:2] != "0x") {
-			params[2] = "0x" + params[2]
-		}
-
-
 		reply, errReply := s.handleTCPSubmitRPC(cs, id, params)
 		if errReply != nil {
 			log.Println("mining.submit: handleTCPSubmitRPC failed")

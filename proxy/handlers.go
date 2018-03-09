@@ -63,38 +63,26 @@ func (s *ProxyServer) handleSubmitRPC(cs *Session, login, id string, params []st
 		return false, &ErrorReply{Code: -1, Message: "Invalid params"}
 	}
 
-	// TEST: PREPEND 0x for NiceHash submissions
+	// nicehash hack FIXME
+	isNicehash := 0
 	for i := 0; i <= 2; i++ {
 		if params[i][0:2] != "0x" {
+			log.Printf("handleSubmitRPC, params[%d] = %s, len = %d", i, params[i], len(params[i]))
 			params[i] = "0x" + params[i]
+			isNicehash++
 		}
-		//log.Printf("handleSubmitRPC, params[%d] = %s", i, params[i])
+	}
+	if isNicehash != 3 {
+		isNicehash = 0
 	}
 
 	if !noncePattern.MatchString(params[0]) || !hashPattern.MatchString(params[1]) || !hashPattern.MatchString(params[2]) {
 		s.policy.ApplyMalformedPolicy(cs.ip)
 		log.Printf("Malformed PoW result from %s@%s %v", login, cs.ip, params)
-
-		// TEST
-		if !noncePattern.MatchString(params[0]) {
-			log.Printf("[0] noncePattern %s", params[0])
-		}
-		if !hashPattern.MatchString(params[1]) {
-			log.Printf("[1] hashPattern %s", params[1])
-		}
-		if !hashPattern.MatchString(params[2]) {
-			log.Printf("[2] hashPattern %s", params[2])
-		}
-
 		return false, &ErrorReply{Code: -1, Message: "Malformed PoW result"}
 	}
 	t := s.currentBlockTemplate()
-
-	/// ORIGINAL
-	//exist, validShare := s.processShare(login, id, cs.ip, t, params)
-	/// NICEHASH
-	exist, validShare := s.processShareNH(login, id, cs.ip, t, params)
-
+	exist, validShare := s.processShare(login, id, cs.ip, t, params, isNicehash != 0)
 	ok := s.policy.ApplySharePolicy(cs.ip, !exist && validShare)
 
 	if exist {
