@@ -71,8 +71,11 @@ func NewProxy(cfg *Config, backend *storage.RedisClient) *ProxyServer {
 	}
 	log.Printf("Default upstream: %s => %s", proxy.rpc().Name, proxy.rpc().Url)
 
-	if cfg.Proxy.Stratum.Enabled {
+	if cfg.Proxy.Stratum.Enabled || cfg.Proxy.StratumNiceHash.Enabled {
 		proxy.sessions = make(map[*Session]struct{})
+	}
+
+	if cfg.Proxy.Stratum.Enabled {
 		go proxy.ListenTCP()
 	}
 
