@@ -39,10 +39,10 @@ func (s *ProxyServer) processShare(login, id, ip string, t *BlockTemplate, param
 		shareDiffFloat = shareDiffFloat * 0.98
 
 		shareDiff_big := util.DiffFloatToDiffInt(shareDiffFloat)
-		shareDiff = shareDiff_big.Int64()
+		shareDiffCalc := shareDiff_big.Int64()
 
 		log.Printf(">>> hashNoNonce = %v, mixDigest = %v, shareDiff = %v, sharedFloat = %v\n",
-			hashNoNonceTmp.Hex(), mixDigestTmp.Hex(), shareDiff, shareDiffFloat)
+			hashNoNonceTmp.Hex(), mixDigestTmp.Hex(), shareDiffCalc, shareDiffFloat)
 
 		params[1] = hashNoNonceTmp.Hex()
 		params[2] = mixDigestTmp.Hex()
