@@ -46,7 +46,7 @@ type Proxy struct {
 
 	Stratum Stratum `json:"stratum"`
 
-	StratumNiceHash StratumNiceHash `json:"stratum_nice_hash"`
+	StratumNiceHash StratumNiceHash `json:"nicehash"`
 }
 
 type Stratum struct {
