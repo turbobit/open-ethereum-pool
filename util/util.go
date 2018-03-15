@@ -101,3 +101,13 @@ func DiffFloatToDiffInt(diffFloat float64) (diffInt *big.Int) {
     target := DiffToTarget(diffFloat)
     return new(big.Int).Div(pow256, target)
 }
+
+func DiffFloatToInt(diffFloat float64) (diffInt int64) {
+    diffInt = int64(diffFloat * float64(1<<48) / float64(0xffff)) // 48 = 256 - 26*8
+    return
+}
+
+func DiffIntToFloat(diffInt int64) (diffFloat float64) {
+    diffFloat = float64(diffInt * 0xffff) / float64(1<<48) // 48 = 256 - 26*8
+    return
+}

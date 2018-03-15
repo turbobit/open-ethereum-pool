@@ -148,7 +148,7 @@ func (cs *Session) handleNHTCPMessage(s *ProxyServer, req *StratumReq) error {
 		}
 
 		paramsDiff := []float64{
-			s.config.Proxy.DifficultyNiceHash,
+			util.DiffIntToFloat(s.config.Proxy.Difficulty),
 		}
 		respReq := JSONRpcReqNH{Method: "mining.set_difficulty", Params: paramsDiff}
 		if err := cs.sendTCPNHReq(respReq); err != nil {
