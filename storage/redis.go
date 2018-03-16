@@ -957,3 +957,26 @@ func convertPaymentsResults(raw *redis.ZSliceCmd) []map[string]interface{} {
 	}
 	return result
 }
+
+func (r *RedisClient) CheckHashLimit(login string, hashrateWindow time.Duration, hashrateLargeWindow time.Duration, hashLimit int64) (bool, error) {
+	exist, err := r.IsMinerExists(login)
+	if !exist {
+		return true, nil
+	}
+	if err != nil {
+		return true, nil
+	}
+
+	stats, err := r.CollectWorkersStats(hashrateWindow, hashrateLargeWindow, login)
+	if err != nil {
+		return true, nil
+	}
+
+	currentHashrate := stats["currentHashrate"].(int64)
+
+	if hashLimit > 0 && currentHashrate > hashLimit {
+		return false, fmt.Errorf("hashLimit exceed: %v(current) > %v(hashLimit)", currentHashrate, hashLimit)
+	}
+
+	return true, nil
+}
