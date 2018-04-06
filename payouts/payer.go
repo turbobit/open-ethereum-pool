@@ -18,6 +18,8 @@ import (
 
 const txCheckInterval = 5 * time.Second
 
+var ConcurrentTx = 10 // default concurrentTx
+
 type PayoutsConfig struct {
 	Enabled      bool   `json:"enabled"`
 	RequirePeers int64  `json:"requirePeers"`
@@ -67,6 +69,11 @@ func (u *PayoutsProcessor) Start() {
 		log.Println("Now you have to restart payouts module with RESOLVE_PAYOUT=0 for normal run")
 		return
 	}
+
+	if u.config.ConcurrentTx > 0 {
+		ConcurrentTx = u.config.ConcurrentTx
+	}
+	log.Printf("Set Concurrent TX to %v", ConcurrentTx)
 
 	intv := util.MustParseDuration(u.config.Interval)
 	timer := time.NewTimer(intv)
@@ -224,7 +231,7 @@ func (u *PayoutsProcessor) process() {
 			wg.Done()
 		}(txHash, login, &wg)
 
-		if waitingCount > u.config.ConcurrentTx {
+		if waitingCount > ConcurrentTx {
 			wg.Wait()
 			waitingCount = 0
 		}
