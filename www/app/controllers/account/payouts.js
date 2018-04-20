@@ -8,7 +8,7 @@ export default Ember.Controller.extend({
 
   chartPaymentText: Ember.computed('model', {
     get() {
-      var outText = this.get('model.paymentCharts');
+      var outText = this.get('model.payments');
       if (!outText) {
         return 0;
       }
@@ -16,10 +16,10 @@ export default Ember.Controller.extend({
     }
   }),
 
-  chartPayment: Ember.computed('intl', 'model.paymentCharts', {
+  chartPayment: Ember.computed('intl', 'model', {
     get() {
         var e = this,
-            t = e.getWithDefault("model.paymentCharts"),
+            t = e.getWithDefault("model.payments"),
             a = {
                 chart: {
                     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -30,10 +30,10 @@ export default Ember.Controller.extend({
                         load: function() {
                             var self = this;
                             setInterval(function() {
-                                t = e.getWithDefault("model.paymentCharts");
+                                t = e.getWithDefault("model.payments");
                                 var data = [];
                                 t.forEach(function(d) {
-                                    var r = new Date(1000 * d.x);
+                                    var r = new Date(1000 * d.timestamp);
                                     var l = r.toLocaleString();
                                     var n = e.amount / 1000000000;
                                     data.push({x: r, d: l, y: n});
@@ -85,7 +85,7 @@ export default Ember.Controller.extend({
                         var a = [];
                         if (null != t) {
                             t.forEach(function(d) {
-                                var r = new Date(1000 * d.x);
+                                var r = new Date(1000 * d.timestamp);
                                 var l = r.toLocaleString();
                                 var n = d.amount / 1000000000;
                                 a.push({x: r, d: l, y: n});
