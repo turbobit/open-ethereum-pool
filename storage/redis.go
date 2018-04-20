@@ -696,7 +696,7 @@ func (r *RedisClient) GetMinerStats(login string, maxPayments int64) (map[string
 
 	cmds, err := tx.Exec(func() error {
 		tx.HGetAllMap(r.formatKey("miners", login))
-		tx.ZRevRangeWithScores(r.formatKey("payments", login), 0, maxPayments-1)
+		tx.ZRangeWithScores(r.formatKey("payments", login), 0, maxPayments-1)
 		tx.ZCard(r.formatKey("payments", login))
 		tx.HGet(r.formatKey("shares", "roundCurrent"), login)
 		return nil
