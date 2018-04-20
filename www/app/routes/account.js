@@ -2,9 +2,21 @@ import Ember from 'ember';
 import config from '../config/environment';
 
 export default Ember.Route.extend({
+  minerCharts: null,
+
 	model: function(params) {
 		var url = config.APP.ApiUrl + 'api/accounts/' + params.login;
+    let charts = this.get('minerCharts');
+    if (!charts) {
+      url += '/chart';
+    }
+    let self = this;
     return Ember.$.getJSON(url).then(function(data) {
+      if (!charts) {
+        self.set('minerCharts', data.minerCharts);
+      } else {
+        data.minerCharts = self.get('minerCharts');
+      }
       data.login = params.login;
       return Ember.Object.create(data);
     });
