@@ -164,7 +164,7 @@ func (r *RedisClient) GetPoolCharts(poolHashLen int64) (stats []*PoolCharts, err
 
 	cmds, err := tx.Exec(func() error {
 		tx.ZRemRangeByScore(r.formatKey("charts", "pool"), "-inf", fmt.Sprint("(", now-172800))
-		tx.ZRevRangeWithScores(r.formatKey("charts", "pool"), 0, poolHashLen)
+		tx.ZRangeWithScores(r.formatKey("charts", "pool"), 0, poolHashLen)
 		return nil
 	})
 
@@ -236,7 +236,7 @@ func (r *RedisClient) GetMinerCharts(hashNum int64, login string) (stats []*Mine
 	now := util.MakeTimestamp() / 1000
 	cmds, err := tx.Exec(func() error {
 		tx.ZRemRangeByScore(r.formatKey("charts", "miner", login), "-inf", fmt.Sprint("(", now-172800))
-		tx.ZRevRangeWithScores(r.formatKey("charts", "miner", login), 0, hashNum)
+		tx.ZRangeWithScores(r.formatKey("charts", "miner", login), 0, hashNum)
 		return nil
 	})
 	if err != nil {
@@ -251,7 +251,7 @@ func (r *RedisClient) GetPaymentCharts(login string) (stats []*PaymentCharts, er
 	tx := r.client.Multi()
 	defer tx.Close()
 	cmds, err := tx.Exec(func() error {
-		tx.ZRevRangeWithScores(r.formatKey("payments", login), 0, 360)
+		tx.ZRangeWithScores(r.formatKey("payments", login), 0, 360)
 		return nil
 	})
 	if err != nil {
